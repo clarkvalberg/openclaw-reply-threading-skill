@@ -1,0 +1,4 @@
+display_name: OpenClaw Reply Threading
+short_description: Use message replies as context anchors for cleaner multi-topic OpenClaw chats.
+default_prompt: Use reply metadata to keep parallel chat topics organized and scoped.
+
