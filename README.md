@@ -1,18 +1,19 @@
 # OpenClaw Reply Threading Skill
 
-`openclaw-reply-threading` is a reusable OpenClaw skill for making message replies behave like lightweight threads.
+`openclaw-reply-threading` is a reusable OpenClaw skill for making message replies and emoji reactions behave like lightweight threads.
 
-It teaches an OpenClaw agent to use native reply metadata as a context anchor, so a direct chat can support multiple simultaneous topics without becoming muddled.
+It teaches an OpenClaw agent to use native reply and reaction metadata as context anchors, so a direct chat can support multiple simultaneous topics without becoming muddled.
 
 ## Who This Is For
 
-This skill is for people who use OpenClaw through conversational messaging surfaces such as WhatsApp, Slack, Discord, or similar chat UIs where replies can point at earlier messages.
+This skill is for people who use OpenClaw through conversational messaging surfaces such as WhatsApp, Slack, Discord, or similar chat UIs where replies and reactions can point at earlier messages.
 
 It is especially useful when:
 
 - You run several topics in one chat.
 - You often send short follow-ups like `yes`, `nope`, `?`, or `didn't work`.
 - You want the assistant to know which prior message you are responding to.
+- You use emoji reactions as lightweight acknowledgments, approvals, or priority signals.
 - You want approvals and corrections scoped to one specific proposal.
 - You want less repeated context-setting and fewer confused thread merges.
 
@@ -24,8 +25,9 @@ With this skill, the agent follows a clearer model:
 
 1. The user's current message matters most.
 2. The message they replied to is the main context anchor.
-3. The active topic follows from that anchor.
-4. Nearby chronological chat is secondary.
+3. A reaction is a compact signal scoped to the reacted-to message.
+4. The active topic follows from that anchor.
+5. Nearby chronological chat is secondary.
 
 This makes the conversation feel more like natural human chat: reply to the thing you mean, and the assistant follows that thread.
 
@@ -38,9 +40,11 @@ This skill makes OpenClaw use that structure deliberately.
 Recommended OpenClaw behavior:
 
 - Preserve incoming reply metadata such as `reply_to_id`, quoted body, and `has_reply_context`.
+- Preserve reaction metadata such as emoji, reacted-to message ID, and target body when available.
 - Send visible responses using native replies when the transport supports it.
-- Treat replies as local thread anchors for reasoning.
+- Treat replies and reactions as local thread anchors for reasoning.
 - Keep high-impact approvals scoped to the quoted message.
+- Treat reaction-only approvals conservatively for public or irreversible actions.
 - Fall back to short textual anchors only when native reply metadata is unavailable.
 
 ## Installation
@@ -64,6 +68,7 @@ See [`examples/reply-threading.md`](examples/reply-threading.md) for realistic e
 ## Design Principles
 
 - Replies are context, not decoration.
+- Reactions are scoped signals, not decoration.
 - Short messages should be resolved against their reply target.
 - Thread locality beats raw recency.
 - Native reply UI should reduce assistant verbosity.
@@ -71,9 +76,8 @@ See [`examples/reply-threading.md`](examples/reply-threading.md) for realistic e
 
 ## Repository Keywords
 
-OpenClaw, Codex skill, WhatsApp replies, reply metadata, conversational agents, AI assistant workflow, message threading, multi-topic chat, context anchoring.
+OpenClaw, Codex skill, WhatsApp replies, emoji reactions, reply metadata, reaction metadata, conversational agents, AI assistant workflow, message threading, multi-topic chat, context anchoring.
 
 ## License
 
 MIT
-

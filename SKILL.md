@@ -1,13 +1,15 @@
 ---
 name: openclaw-reply-threading
-description: Use message replies as context anchors in OpenClaw chats so multi-topic work stays fast, organized, and natural.
+description: Use replies and reactions as context anchors in OpenClaw chats so multi-topic work stays fast, organized, and natural.
 ---
 
 # OpenClaw Reply Threading
 
-Use native message replies as lightweight thread anchors. This lets a user and OpenClaw keep several topics moving in one chat without repeatedly restating context.
+Use native message replies and reactions as lightweight thread anchors. This lets a user and OpenClaw keep several topics moving in one chat without repeatedly restating context.
 
 The core behavior: when a user message includes reply metadata, treat the replied-to message as the primary local context for the new request.
+
+When a user reacts with an emoji, treat the reaction as a compact signal scoped to the reacted-to message. A reaction is weaker than a text reply, but it is still meaningful context.
 
 ## Context Priority
 
@@ -34,6 +36,30 @@ A reply can signal:
 
 Short messages like `yes`, `nope`, `?`, `do it`, `same`, or `didn't work` should be interpreted against the quoted message before asking a follow-up question.
 
+## What Reactions Mean
+
+A reaction can signal:
+
+- Acknowledgment: the user saw or accepts the message.
+- Approval: the user likes or agrees with the specific message.
+- Disagreement: the user rejects or questions the specific message.
+- Priority: the user is marking the message as important.
+- Completion: the user is indicating the item is done.
+- Interest: the user wants more on that topic later.
+
+Interpret reactions conservatively. They are excellent for lightweight organization, but they usually should not trigger large actions by themselves.
+
+Common defaults:
+
+- `👍`, `✅`, `🙌`: positive acknowledgment or approval of the reacted-to message.
+- `👀`: seen, tracking, or worth watching.
+- `❤️`: strong appreciation or personal resonance.
+- `😂`, `💀`: humor or amusement; do not treat as task approval.
+- `🤔`: uncertainty, curiosity, or needs more thought.
+- `❌`, `👎`: rejection or disagreement with the reacted-to message.
+
+These meanings are defaults, not universal rules. Prefer the user's established style when known.
+
 ## Response Behavior
 
 When sending a visible reply on a surface that supports native replies, reply to the inbound message that triggered the response.
@@ -47,6 +73,8 @@ Use a light textual anchor only when it adds clarity:
 - `For the voice script: ...`
 
 Do not over-label routine messages. The native reply UI should carry most of the organization.
+
+For reaction-only events, usually do not send a message. Update local interpretation of the thread, task, or priority quietly unless the reaction clearly requires a follow-up.
 
 ## Multi-Topic Workflow
 
@@ -75,17 +103,21 @@ If one interpretation is clearly more likely, proceed and state the assumption b
 
 A reply can approve only the action described in the quoted message.
 
+An emoji reaction can support low-risk approval or acknowledgment, but it should not be the only basis for external, public, costly, or irreversible actions unless the surrounding workflow explicitly established that reaction as approval.
+
 Before external, public, costly, or irreversible actions:
 
 - Verify that the quoted message contained the proposed action.
-- Verify that the current user text clearly approves that action.
-- If reply metadata is missing, do not infer high-impact approval from a bare `yes`.
+- Verify that the current user text or established reaction workflow clearly approves that action.
+- If reply or reaction metadata is missing, do not infer high-impact approval from a bare `yes` or a detached emoji.
 
 Examples:
 
 - If the user replies `yes` to a draft-send proposal, that can approve sending that specific draft.
 - If the user replies `yes` to a general discussion message, that is not enough approval for a new external action.
 - If the user replies `do it` to a public publishing plan, keep the action scoped to the quoted plan.
+- If the user reacts `👍` to a low-risk internal organization proposal, that can be treated as approval.
+- If the user reacts `👍` to a public-send or publish proposal, ask for text confirmation unless the workflow already says that reaction is sufficient.
 
 ## Memory And Follow-Through
 
@@ -103,6 +135,7 @@ Verify inbound and outbound behavior separately:
 
 - Outbound: assistant messages render as native replies in the user's app.
 - Inbound: user replies arrive with a reply target such as `has_reply_context`, `reply_to_id`, and a quoted target body or retrievable target ID.
+- Reactions: user reactions arrive with the emoji, reacted-to message ID, and target message body or retrievable target ID.
 - Reasoning: the assistant actually uses the quote target to resolve short or ambiguous messages.
 
 If outbound native replies fail visually, use a short textual anchor while debugging transport.

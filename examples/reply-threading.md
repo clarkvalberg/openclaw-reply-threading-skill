@@ -62,3 +62,33 @@ Expected behavior:
 - If the action is low impact and obvious, proceed with a brief assumption.
 - If the action is external, public, costly, or irreversible, ask what the `yes` refers to.
 
+## Reaction As A Scoped Signal
+
+Assistant:
+
+> I can add a recurring private Bee sync every 30 minutes.
+
+User reacts to that exact message with:
+
+> 👍
+
+Expected behavior:
+
+- Treat the reaction as lightweight approval for the specific low-risk internal setup.
+- Keep the approval scoped to that message.
+- Do not apply the same approval to unrelated setup work.
+
+## Reaction Is Not Enough For High-Impact Work
+
+Assistant:
+
+> I can publish this private draft publicly.
+
+User reacts with:
+
+> 👍
+
+Expected behavior:
+
+- Treat the reaction as positive signal, not final authorization.
+- Ask for explicit text confirmation before publishing.
