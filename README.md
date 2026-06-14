@@ -31,6 +31,29 @@ With this skill, the agent follows a clearer model:
 
 This makes the conversation feel more like natural human chat: reply to the thing you mean, and the assistant follows that thread.
 
+## Emoji Reactions As Replies
+
+Emoji reactions are not full messages, but they are still attached to a specific message. This skill treats them as reaction-scoped context anchors.
+
+That means a `👍`, `✅`, `👀`, `❤️`, `😂`, `🤔`, or `❌` should be interpreted against the message it reacted to, not as a loose signal about the whole conversation.
+
+Default interpretation:
+
+- `👍`, `✅`, `🙌`: acknowledgment or approval of the reacted-to message.
+- `👀`: seen, tracking, or worth watching.
+- `❤️`: strong appreciation or personal resonance.
+- `😂`, `💀`: amusement; not task approval.
+- `🤔`: uncertainty, curiosity, or needs more thought.
+- `❌`, `👎`: rejection or disagreement.
+
+Reaction-only events usually should not trigger a chat response. They should quietly update the agent's working context, task state, or priority model unless a follow-up is clearly useful.
+
+Approval rules stay conservative:
+
+- Low-risk internal actions can use a clear positive reaction as approval when the reacted-to message contains the action.
+- Public, external, costly, or irreversible actions still need explicit text confirmation unless the workflow already established that a reaction counts.
+- A reaction only applies to the message it is attached to. It does not approve adjacent plans or later actions.
+
 ## OpenClaw Fit
 
 OpenClaw often runs inside real messaging channels. Those channels already have useful social structure: replies, quotes, reactions, message IDs, and visible context.

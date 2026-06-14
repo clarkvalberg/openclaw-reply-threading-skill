@@ -77,6 +77,39 @@ Expected behavior:
 - Treat the reaction as lightweight approval for the specific low-risk internal setup.
 - Keep the approval scoped to that message.
 - Do not apply the same approval to unrelated setup work.
+- A short confirmation is optional; it is usually better to do the work and report only if something changes.
+
+## Reaction-Only Acknowledgment
+
+Assistant:
+
+> I found the failing check. It is a lint error in `src/messages.ts`.
+
+User reacts with:
+
+> 👀
+
+Expected behavior:
+
+- Treat the reaction as "seen" or "tracking."
+- Do not send a standalone "got it" reply.
+- Keep the finding available as the active context if the user later replies with `fix it`.
+
+## Reaction As Disagreement
+
+Assistant:
+
+> I think we should make replies mandatory for every follow-up.
+
+User reacts with:
+
+> ❌
+
+Expected behavior:
+
+- Treat the reaction as rejection of that specific recommendation.
+- Do not treat it as rejection of the whole project.
+- Revise the recommendation toward a lighter default, such as replies for ambiguous or parallel topics.
 
 ## Reaction Is Not Enough For High-Impact Work
 
@@ -92,3 +125,4 @@ Expected behavior:
 
 - Treat the reaction as positive signal, not final authorization.
 - Ask for explicit text confirmation before publishing.
+- Keep the confirmation prompt scoped to the reacted-to publication proposal.
